@@ -1,11 +1,18 @@
-using System;
+using IdentityServer4.Models;
 
-namespace IndentityServerFour.Models
+namespace IdentityServerFour.Models
 {
     public class ErrorViewModel
     {
-        public string RequestId { get; set; }
+        public ErrorViewModel()
+        {
+        }
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public ErrorViewModel(string error)
+        {
+            Error = new ErrorMessage { Error = error };
+        }
+
+        public ErrorMessage Error { get; set; }
     }
 }

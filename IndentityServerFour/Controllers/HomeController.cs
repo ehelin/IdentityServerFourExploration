@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using IdentityServer4.Services;
+using IdentityServerFour.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using IndentityServerFour.Models;
 
 namespace IndentityServerFour.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IIdentityServerInteractionService _interaction;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IIdentityServerInteractionService interaction)
         {
-            _logger = logger;
+            _interaction = interaction;
         }
 
         public IActionResult Index()
@@ -23,15 +21,19 @@ namespace IndentityServerFour.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Error(string errorId)
         {
-            return View();
-        }
+            var vm = new ErrorViewModel();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            // retrieve error details from identityserver
+            var message = await _interaction.GetErrorContextAsync(errorId);
+            if(message != null)
+            {
+                vm.Error = message;
+                message.ErrorDescription = null;
+            }
+
+            return View("Error", vm);
         }
     }
 }
