@@ -1,5 +1,5 @@
 # IdentityServerFourExploration
-A .NET Core C# Web Application learning and exploring Identity Server 4
+A .NET Core C# Web Application for learning Identity Server 4
 
 This project is solely for learning Identity Server 4.  
 
