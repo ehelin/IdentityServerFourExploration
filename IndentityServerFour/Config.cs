@@ -24,22 +24,24 @@ namespace IdentityServerFour
             new List<Client>
             {
                 new Client
-                {
+                {                    
                     ClientId = "mvc",
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-                    AllowAccessTokensViaBrowser = true,
                     AccessTokenType = AccessTokenType.Jwt,
+					AllowedGrantTypes = GrantTypes.ImplicitAndClientCredentials,
 
-                    AllowedGrantTypes = GrantTypes.Implicit,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    AllowAccessTokensViaBrowser = true,
                     AlwaysSendClientClaims = true,
                     AlwaysIncludeUserClaimsInIdToken = true,
                     AllowOfflineAccess = true,
                     AccessTokenLifetime = 8000,
 
-                    RequireConsent = false,
-
                     // where to redirect to after login
-                    RedirectUris = { "https://localhost:44359/signin-oidc" },
+                    RedirectUris = { "https://localhost:44359/signin-oidc", "https://localhost:44359/" },
 
                     // where to redirect to after logout
                     PostLogoutRedirectUris = { "https://localhost:44359/signout-callback-oidc" },
@@ -47,7 +49,8 @@ namespace IdentityServerFour
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email
                     }
                 }
             };

@@ -1,4 +1,5 @@
-using IdentityServer4;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography.X509Certificates;
 using IdentityServerFour;
 using IdentityServerFour.Misc;
 using Microsoft.AspNetCore.Builder;
@@ -6,22 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using IdentityServer4.Services;
-using IdentityServer4.Validation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-//using SWBC.Portal.Web.IdentityServer;
-//using Config = SWBC.Portal.Web.Configuration;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc.Filters;
-//using Local = SWBC.Portal.Web.IdentityServer;
 
 namespace IndentityServerFour
 {
@@ -39,8 +24,6 @@ namespace IndentityServerFour
         {
             services.AddControllersWithViews();
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
             var builder = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
@@ -49,19 +32,29 @@ namespace IndentityServerFour
                 options.Events.RaiseSuccessEvents = true;
                 options.AccessTokenJwtType = "JWT";
             })
+              .AddTestUsers(TestUsers.Users)
               .AddInMemoryIdentityResources(Config.IdentityResources)
               .AddInMemoryApiScopes(Config.ApiScopes)
               .AddInMemoryClients(Config.Clients)
-              .AddTestUsers(TestUsers.Users);
+              .AddSigningCredential(new X509Certificate2("testclient.pfx", "test"));
+            
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             builder.AddDeveloperSigningCredential();
-            services.AddAuthentication()
-               .AddOpenIdConnect("oidc", "IdentityServerFour", options =>
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+              .AddCookie("Cookies")
+               .AddOpenIdConnect("oidc", options =>
                {
-                   options.SaveTokens = true;
                    options.Authority = "https://localhost:44359/";
-                   options.ClientId = "mvc";
-                   options.ResponseType = "id_token token";
                    options.RequireHttpsMetadata = false;
+
+                   options.ClientId = "mvc";
+                   options.SaveTokens = true;
+                   options.ResponseType = "id_token token";
                });
         }
 
@@ -78,7 +71,7 @@ namespace IndentityServerFour
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
