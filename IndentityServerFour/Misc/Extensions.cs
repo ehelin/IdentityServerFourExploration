@@ -1,8 +1,7 @@
-
 using System;
 using IdentityServer4.Models;
-using Microsoft.AspNetCore.Mvc;
 using IdentityServerFour.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServerFour.Misc
 {

@@ -19,7 +19,7 @@ namespace IndentityServerFour.Controllers
 
         public IActionResult Index()
         {
-            var result = GetToken().Result;
+            var result = GetAuthenticateResult().Result;
 
             var items = result?.Ticket?.Properties?.Items;
             if(items.ContainsKey(".Token.id_token"))
@@ -30,10 +30,8 @@ namespace IndentityServerFour.Controllers
 
             return View();
         }
-        protected async Task<AuthenticateResult> GetToken()
+        protected async Task<AuthenticateResult> GetAuthenticateResult()
         {
-            var claims = (User as System.Security.Claims.ClaimsPrincipal).Claims;
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
             var result = await HttpContext.AuthenticateAsync();
 
             return result;

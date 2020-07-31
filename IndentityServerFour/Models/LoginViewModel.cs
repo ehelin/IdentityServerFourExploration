@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace IdentityServerFour.Models
 {
     public class LoginViewModel : LoginInputModel
