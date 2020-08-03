@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography.X509Certificates;
+using IdentityServer4;
 using IdentityServerFour;
 using IdentityServerFour.Misc;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Sustainsys.Saml2;
+using Sustainsys.Saml2.Metadata;
 
 namespace IndentityServerFour
 {
@@ -42,16 +45,28 @@ namespace IndentityServerFour
 
             builder.AddDeveloperSigningCredential();
             services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = "Cookies";
-                options.DefaultChallengeScheme = "oidc";
-            })
+               {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "oidc";
+               })
+              .AddSaml2(options =>
+              {
+                  options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                  options.SignOutScheme = IdentityServerConstants.DefaultCookieAuthenticationScheme;
+                  options.SPOptions.EntityId = new EntityId("https://stubidp.sustainsys.com/Metadata");
+                  options.IdentityProviders.Add(
+                    new IdentityProvider(
+                        new EntityId("https://stubidp.sustainsys.com/Metadata"), options.SPOptions)
+                    {
+                        LoadMetadata = true
+                    });
+                  options.SPOptions.ServiceCertificates.Add(new X509Certificate2("Sustainsys.Saml2.Tests.pfx"));
+              })
               .AddCookie("Cookies")
                .AddOpenIdConnect("oidc", options =>
                {
                    options.Authority = "https://localhost:44359/";
                    options.RequireHttpsMetadata = false;
-
                    options.ClientId = "mvc";
                    options.SaveTokens = true;
                    options.ResponseType = "id_token token";
