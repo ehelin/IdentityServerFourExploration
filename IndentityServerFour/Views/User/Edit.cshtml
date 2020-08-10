@@ -1,0 +1,74 @@
+﻿@model IdentityServerFour.Models.UserModel
+
+@{
+	ViewData["Title"] = "Edit User";
+}
+<form method="post" asp-controller="User" asp-action="SaveUser">
+	<div class="text-center">
+		<h1 class="display-4">Edit User</h1>
+		<table border="1">
+			<tr>
+				<td>Subject Id</td>
+				<td>
+					@if(Model.CreateUser)
+					{
+						<input asp-for="@Model.SubjectId" />
+					}
+					else
+					{
+						<input asp-for="@Model.SubjectId" readonly />
+					}
+				</td>
+			</tr>
+			<tr>
+				<td>User Name</td>
+				<td>
+					<input asp-for="@Model.UserName" />
+				</td>
+			</tr>
+			<tr>
+				<td>Password</td>
+				<td>
+					<input asp-for="@Model.Password" />
+				</td>
+			</tr>
+			<tr>
+				<td>Name</td>
+				<td>
+					<input asp-for="@Model.Name" />
+				</td>
+			</tr>
+			<tr>
+				<td>GivenName</td>
+				<td>
+					<input asp-for="@Model.GivenName" />
+				</td>
+			</tr>
+			<tr>
+				<td>FamilyName</td>
+				<td>
+					<input asp-for="@Model.FamilyName" />
+				</td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td>
+					<input asp-for="@Model.Email" />
+				</td>
+			</tr>
+			<tr>
+				<td>Website</td>
+				<td>
+					<input asp-for="@Model.Website" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="Submit" />
+					@Html.ActionLink("Cancel", "Index", "User", new { @class = "btn btn-info", @id = "addressSearch" })
+				</td>
+			</tr>
+		</table>
+		<input type="hidden" asp-for="@Model.CreateUser" />
+	</div>
+</form>
