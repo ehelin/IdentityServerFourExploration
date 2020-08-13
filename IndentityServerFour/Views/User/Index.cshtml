@@ -7,11 +7,16 @@
 	<h1>Users</h1>	
 	<a asp-controller="User" asp-action="Create">Create</a>
 	<table border="1" width="100%">
+		<tr>
+			<td>Subject Name</td>
+			<td>User Name</td>
+			<td></td>
+		</tr>
 		@foreach(var user in Model.Users)
 		{
 			<tr>
-				<td>Subject Id</td><td> @user.SubjectId</td>
-				<td>User Name</td><td> @user.Username</td>
+				<td> @user.SubjectId</td>
+				<td> @user.Username</td>
 				<td><a asp-controller="User" asp-action="Edit" asp-route-id="@user.SubjectId">Edit</a></td>
 			</tr>
 		}

@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text.Json;
+﻿using System.Linq;
 using IdentityModel;
-using System.Linq;
-using IdentityServer4;
 using IdentityServer4.Test;
 
 namespace IdentityServerFour.Models
@@ -17,11 +13,11 @@ namespace IdentityServerFour.Models
             this.SubjectId = user.SubjectId;
             this.UserName = user.Username;
             this.Password = user.Password;
-            this.Name = user.Claims.Where(x => x.Type == "name").Select(x => x.Value).FirstOrDefault();
-            this.GivenName = user.Claims.Where(x => x.Type == "given_name").Select(x => x.Value).FirstOrDefault();
-            this.FamilyName = user.Claims.Where(x => x.Type == "family_name").Select(x => x.Value).FirstOrDefault();
-            this.Email = user.Claims.Where(x => x.Type == "email").Select(x => x.Value).FirstOrDefault();
-            this.Website = user.Claims.Where(x => x.Type == "website").Select(x => x.Value).FirstOrDefault();
+            this.Name = user.Claims.Where(x => x.Type == JwtClaimTypes.Name).Select(x => x.Value).FirstOrDefault();
+            this.GivenName = user.Claims.Where(x => x.Type == JwtClaimTypes.GivenName).Select(x => x.Value).FirstOrDefault();
+            this.FamilyName = user.Claims.Where(x => x.Type == JwtClaimTypes.FamilyName).Select(x => x.Value).FirstOrDefault();
+            this.Email = user.Claims.Where(x => x.Type == JwtClaimTypes.Email).Select(x => x.Value).FirstOrDefault();
+            this.Website = user.Claims.Where(x => x.Type == JwtClaimTypes.WebSite).Select(x => x.Value).FirstOrDefault();
         }
 
         public bool CreateUser { get; set; }

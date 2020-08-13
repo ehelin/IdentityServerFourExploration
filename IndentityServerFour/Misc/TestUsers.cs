@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Test;
 using IdentityServerFour.Models;
-using System.Linq;
 
 namespace IdentityServerFour.Misc
 {
@@ -28,11 +28,7 @@ namespace IdentityServerFour.Misc
                 user.Username = model.UserName;
                 user.Password = model.Password;
 
-                user.Claims.Add(new Claim("Name", model.Name));
-                user.Claims.Add(new Claim("GivenName", model.GivenName));
-                user.Claims.Add(new Claim("FamilyName", model.FamilyName));
-                user.Claims.Add(new Claim("Email", model.Email));
-                user.Claims.Add(new Claim("Website", model.Website));
+                AddClaims(user, model);
 
                 TestUsers.Users.Add(user);
             }
@@ -52,14 +48,12 @@ namespace IdentityServerFour.Misc
 
                     user.Claims.Clear();
 
-                    user.Claims.Add(new Claim("Name", model.Name));
-                    user.Claims.Add(new Claim("GivenName", model.GivenName));
-                    user.Claims.Add(new Claim("FamilyName", model.FamilyName));
-                    user.Claims.Add(new Claim("Email", model.Email));
-                    user.Claims.Add(new Claim("Website", model.Website));
+                    AddClaims(user, model);
                 }
             }
         }
+
+        #region Private Methods
 
         private static List<TestUser> InitializeUsers()
         {            
@@ -107,5 +101,16 @@ namespace IdentityServerFour.Misc
                 }
             };
         }
+        
+        private static void AddClaims(TestUser user, UserModel model)
+        {
+            user.Claims.Add(new Claim(JwtClaimTypes.Name, model.Name));
+            user.Claims.Add(new Claim(JwtClaimTypes.GivenName, model.GivenName));
+            user.Claims.Add(new Claim(JwtClaimTypes.FamilyName, model.FamilyName));
+            user.Claims.Add(new Claim(JwtClaimTypes.Email, model.Email));
+            user.Claims.Add(new Claim(JwtClaimTypes.WebSite, model.Website));
+        }
+
+        #endregion
     }
 }
