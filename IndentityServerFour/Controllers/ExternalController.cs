@@ -84,6 +84,10 @@ namespace IdentityServerFour.Controllers
 
             // lookup our user and external provider info
             var (user, provider, providerUserId, claims) = await FindUserFromExternalProviderAsync(result);
+            if(user == null)
+            {
+                user = _users.AutoProvisionUser(provider, providerUserId, claims.ToList());
+            }
 
             await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.SubjectId, user.Username));
             var isuser = new IdentityServerUser(user.SubjectId)
