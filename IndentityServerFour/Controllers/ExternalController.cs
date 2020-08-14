@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using IdentityServerFour.Models;
 
 namespace IdentityServerFour.Controllers
 {
@@ -88,6 +89,10 @@ namespace IdentityServerFour.Controllers
             {
                 user = _users.AutoProvisionUser(provider, providerUserId, claims.ToList());
             }
+
+            var model = new UserModel(user);
+            model.ProviderSubjectId = providerUserId;
+            TestUsers.EditUser(model);
 
             await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.SubjectId, user.Username));
             var isuser = new IdentityServerUser(user.SubjectId)

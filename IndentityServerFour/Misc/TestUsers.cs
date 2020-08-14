@@ -42,7 +42,12 @@ namespace IdentityServerFour.Misc
 
                 if(user != null)
                 {
-                    user.SubjectId = model.SubjectId;
+                    //model.ProviderSubjectId is set when creating external user...so set
+                    if(!string.IsNullOrEmpty(model.ProviderSubjectId))
+                    {
+                        user.SubjectId = model.ProviderSubjectId;
+                    }
+
                     user.Username = model.UserName;
                     user.Password = model.Password;
 
