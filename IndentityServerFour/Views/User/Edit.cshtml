@@ -6,7 +6,14 @@
 <div style="text-align: center">
 	<form method="post" asp-controller="User" asp-action="SaveUser">
 		<div class="text-center">
-			<h1 class="display-4">Edit User</h1>
+			@if(Model.CreateUser) 
+			{
+				<h1 class="display-4">Create User</h1> 
+			} 
+			else 
+			{
+				<h1 class="display-4">Edit User</h1>
+			}
 			<table  border="1" width="100%">
 				<tr>
 					<td>Subject Id</td>
