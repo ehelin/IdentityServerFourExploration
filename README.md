@@ -1,7 +1,5 @@
 # Identity Server Four Exploration
-A .NET Core C# Web Application for learning Identity Server 4
-
-This project is solely for learning Identity Server 4.  
+A .NET Core C# Web Application for learning Identity Server 4 and evaluating if I should use it for TgimbaNetCore.
 
 ## Related Projects/Items
 
